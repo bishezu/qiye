@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC 
+	"-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.liandi.ems04.mapper.attendance.AttendanceMapper">
+
+	<resultMap id="attendanceResultMap" type="attendance">
+		<id column="attendance_id" property="id" />
+		<id column="sid" property="sid" />
+		<result column="name" property="name" />
+		<result column="present_date" property="presentDate" />
+		<result column="check_in" property="checkIn" jdbcType="TIME" />
+		<result column="check_out" property="checkOut" />
+		<result column="arrive_late" property="arriveLate" />
+		<result column="leave_early" property="leaveEarly" />
+		<result column="half_absenteeism" property="halfAbsenteeism" />
+		<result column="absenteeism" property="absenteeism" />
+	</resultMap>
+
+	<!-- 增加 -->
+	<insert id="add" parameterType="Attendance">
+		insert into
+		attendance(sid,name,present_date,check_in,check_out,arrive_late,
+		leave_early,half_absenteeism,absenteeism)
+		values
+		(#{sid},#{name},#{presentDate},#{checkIn},#{checkOut},
+		#{arriveLate},#{leaveEarly},#{halfAbsenteeism},#{absenteeism})
+	</insert>
+
+	<!-- 根据员工编号查询 -->
+	<select id="findBySid" parameterType="int" resultMap="attendanceResultMap">
+		select *
+		from attendance where sid=#{sid}
+	</select>
+
+	<!-- 根据日期查询 -->
+	<select id="findByDate" parameterType="String" resultMap="attendanceResultMap">
+		select
+		* from attendance where present_date=#{presentDate}
+	</select>
+
+	<!-- 根据员工编号和日期查询 -->
+	<select id="findBySidAndDate" parameterType="map"
+		resultMap="attendanceResultMap">
+		select * from attendance where sid=#{sid} and
+		present_date=#{presentDate}
+	</select>
+
+	<!-- 更新 -->
+	<update id="update" parameterType="attendance">
+		update attendance
+		set
+		check_out=#{checkOut},arrive_late=#{arriveLate},leave_early=#{leaveEarly},
+		half_absenteeism=#{halfAbsenteeism},absenteeism=#{absenteeism}
+		where
+		sid=#{sid} and present_date= #{presentDate}
+	</update>
+
+	<!-- 查询全部 -->
+	<select id="findAll" resultMap="attendanceResultMap">
+		select *from attendance
+	</select>
+	
+	
+	
+	
+	<!-- 分页根据员工编号查询 -->
+	<select id="findBySidPage" parameterType="int" resultMap="attendanceResultMap">
+		select *
+		from attendance where sid=#{sid,jdbcType=INTEGER} limit
+		#{startPos},#{pageSize}
+	</select>
+	
+	<!-- 根据员工编号查询取得记录的总数 -->
+	<select id="getAttendanceCountBySid" resultType="long">
+		select count(*) from attendance WHERE sid = #{sid,jdbcType=INTEGER}
+	</select>
+	
+	
+	
+	<!-- 分页根据当前日期查询 -->
+	<select id="findByDatePage"  resultMap="attendanceResultMap">
+		select *
+		from attendance where present_date=#{presentDate,jdbcType=VARCHAR} limit
+		#{startPos,jdbcType=INTEGER},#{pageSize,jdbcType=INTEGER}
+	</select>
+	
+	<!-- 根据当前日期查询取得记录的总数 -->
+	<select id="getAttendanceCountByDate"  resultType="long">
+		select count(*) from attendance where present_date=#{presentDate,jdbcType=VARCHAR	}
+	</select>
+
+
+
+	<!-- 分页查询全部 SQL语句 -->
+	<select id="findAllPage" resultMap="attendanceResultMap">
+		select *
+		from attendance  limit
+		#{startPos},#{pageSize}
+	</select>
+	<!-- 查询全部取得记录的总数 -->
+	<select id="getAttendanceCount" resultType="long">
+		select count(*) from attendance
+	</select>
+
+</mapper>
+
+
+
+
+

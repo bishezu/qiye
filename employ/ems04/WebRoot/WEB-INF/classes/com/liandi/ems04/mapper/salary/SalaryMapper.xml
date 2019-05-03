@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC 
+	"-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+	
+<mapper namespace="com.liandi.ems04.mapper.salary.SalaryMapper">
+	<resultMap id="salaryResultMap" type="salary">
+			<id column="salaryId" property="salaryId"/>
+			<result column="sid" property="sid"/>
+			<result column="salarylevel" property="salaryLevel"/>
+			<result column="present_date" property="presentDate"/>
+			<result column="absence_days" property="absenceDays"/>
+			<result column="absence_fine" property="absenceFine"/>
+			<result column="attend_awards" property="attendAwards"/>
+			<result column="salary_gross" property="salaryGross"/>
+			<result column="insurnce" property="insurnce"/>
+			<result column="salary_tax" property="salaryTax"/>
+			<result column="salary_final" property="salaryFinal"/>
+			<result column="salary_status" property="salaryStatus"/>
+		</resultMap>
+		
+		<resultMap id="staffResultMap" type="Staff">
+		<id column="id" property="id"/>
+		<result column="sid" property="sid"/>
+		<result column="name" property="name"/>
+		<result column="gender" property="gender"/>
+		<result column="hiredate" property="hiredate"/>
+	<!-- 	<result column="seniority" property="seniority"/> -->
+		<result column="account" property="account"/>
+		<result column="password" property="password"/>
+		<result column="dept_id" property="deptId"/>
+		<result column="title_id" property="titleId"/>
+		<result column="salarylevel" property="salarylevel"/>
+		<result column="admintype_id" property="admintypeId"/>
+	</resultMap>
+		
+		<resultMap id="attendanceResultMap" type="attendance">
+		<id column="attendance_id" property="id" />
+		<id column="sid" property="sid" />
+		<result column="name" property="name" />
+		<result column="present_date" property="presentDate" />
+		<result column="check_in" property="checkIn" jdbcType="TIME" />
+		<result column="check_out" property="checkOut" />
+		<result column="arrive_late" property="arriveLate" />
+		<result column="leave_early" property="leaveEarly" />
+		<result column="half_absenteeism" property="halfAbsenteeism" />
+		<result column="absenteeism" property="absenteeism" />
+	</resultMap>
+		
+		
+		<!-- 模糊查询考勤缺半天记录 -->
+		<select id ="count3" parameterType="map" resultType="double">
+		  select count(case when half_absenteeism=true then 1 else null end )
+		  from attendance
+		  where sid = #{sid} and present_date like '%${presentDate}%'
+		</select>
+		
+		<!-- 模糊查询考勤缺一天记录 -->
+		<select id ="count4" parameterType="map" resultType="double">
+		  select count(case when absenteeism=true then 1 else null end)
+		  from attendance
+		  where sid = #{sid} and present_date like '%${presentDate}%'
+		</select>
+		
+		<!-- 模糊查询考勤早退记录 -->
+		<select id ="count2" parameterType="map" resultType="double">
+		  select count(case when leave_early=true then 1 else null end)
+		  from attendance
+		  where sid = #{sid} and present_date like '%${presentDate}%'
+		</select>
+		
+		<!-- 模糊查询考勤迟到记录 -->
+		<select id ="count1" parameterType="map" resultType="double">
+		  select count(case when arrive_late=true then 1 else null end)
+		  from attendance
+		  where sid = #{sid} and present_date like '%${presentDate}%'
+		</select>
+		
+		<!-- 增加记录 -->
+		<insert id="add" >
+			insert into salary(sid,salarylevel,present_date,absence_days,absence_fine,attend_awards,salary_gross,insurnce,salary_tax,salary_final,salary_status)
+			values(#{sid},#{salaryLevel},#{presentDate},#{absenceDays},#{absenceFine},#{attendAwards},#{salaryGross},#{insurnce},#{salaryTax},#{salaryFinal},#{salaryStatus})
+		</insert>
+		
+		<!-- 根据员工id查询 -->
+		<select id="findBySId" parameterType="int" resultMap="salaryResultMap">
+			select *
+			from salary
+			where sid =#{sid} 
+			   
+		</select>
+		
+		
+		
+		<!-- 根据日期查询 -->
+		<select id="findByDate"  resultMap="salaryResultMap" >
+			select *
+			from salary
+			where present_date =#{presentDate}
+			limit #{startPos,jdbcType=INTEGER},#{pageSize,jdbcType=INTEGER} 
+		</select>
+		
+		<!-- 取得记录的总数  -->
+		<select id="getfindByDateCount"  resultType="long">  
+ 		 SELECT COUNT(*) 
+ 		 FROM salary
+ 		 where present_date =#{presentDate,jdbcType=VARCHAR}  
+		</select>
+		
+		
+		<!-- 查询所有 -->
+		<select id="findAll"  resultMap="salaryResultMap">
+			select *
+			from salary
+			
+		</select>
+		
+		<!-- 分页SQL语句 -->  
+		<select id="showsalariesByPage" resultMap="salaryResultMap">  
+		  select  *  
+		  from salary 
+		   limit #{startPos},#{pageSize}   
+		</select>  
+		
+		<!-- 取得记录的总数  -->
+		<select id="getsalariesCount" resultType="long">  
+ 		 SELECT COUNT(*) 
+ 		 FROM salary
+ 		   
+		</select>
+		
+		
+		<!-- 根据员工编号查询 -->
+		<select id="findBySIdStaff" parameterType="int" resultMap="staffResultMap">
+			select *
+			from t_staff
+			where sid=#{sid}
+		</select>
+		
+		<!-- 更新 -->
+		<update id="update" parameterType="salary" >
+			update salary set
+			absence_days = #{absenceDays},
+			absence_fine = #{absenceFine},
+			attend_awards = #{attendAwards},
+			salary_gross = #{salaryGross},
+			insurnce =#{insurnce},
+			salary_tax=#{salaryTax},
+			salary_final=#{salaryFinal}
+			where sid=#{sid} and present_date=#{presentDate}
+		</update>
+		
+		<!-- id日期查找 -->
+		<select id="findBySIdD" parameterType="map"  resultMap="salaryResultMap">
+			select*
+			from salary
+			where sid=#{sid} and present_date =#{presentDate}
+		</select>
+		
+		<!-- 修改员工的薪资等级 -->
+		<update id="updateStaffSalaryLevel" parameterType="Staff">
+			update t_staff
+			set salarylevel=#{salarylevel}
+			where sid=#{sid}
+		</update>
+		
+		<!-- 查询所有 -->
+		<select id="findAllStaff"  resultMap="staffResultMap">
+			select *
+			from t_staff
+			
+		</select>
+		
+		
+</mapper>

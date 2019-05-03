@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC 
+	"-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+	
+<mapper namespace="com.liandi.ems04.mapper.login.LoginMapper">
+
+	<resultMap id="staffResultMap" type="Staff">
+		<id column="id" property="id"/>
+		<result column="sid" property="sid"/>
+		<result column="name" property="name"/>
+		<result column="gender" property="gender"/>
+		<result column="hiredate" property="hiredate"/>
+		<result column="account" property="account"/>
+		<result column="password" property="password"/>
+		<result column="dept_id" property="deptId"/>
+		<result column="title_id" property="titleId"/>
+		<result column="admintype_id" property="admintypeId"/>
+		<result column="nation" property="nation"/>
+		<result column="birthday" property="birthday"/>
+		<result column="phone" property="phone"/>
+		<result column="email" property="email"/>
+		<result column="edubackground" property="edubackground"/>
+		<result column="salarylevel" property="salarylevel"/>
+	</resultMap>
+	
+	<!-- 根据账号密码查询 -->
+	<select id="findByAccountAndPassword" parameterType="map" resultMap="staffResultMap">
+		select *
+		from t_staff
+		where account=#{account}
+		and password=#{password}
+	</select>
+
+	<!-- 根据账号查询是否存在账户 -->
+	<select id="isContainsAccount" parameterType="string" resultType="boolean">
+		select count(*) from t_staff where account = #{account}
+	</select>
+	
+	<!-- 根据账号密码查询 -->
+	<select id="findById" parameterType="int" resultMap="staffResultMap">
+		select *
+		from t_staff
+		where id=#{id}
+	</select>
+	
+	<!-- 修改员工的管理员类别 -->
+	<update id="updateStaffInfo" parameterType="Staff">
+		update t_staff set admintype_id=#{admintypeId}
+			where id=#{id}
+	</update>
+	
+	<!-- 修改员工的密码 -->
+	<update id="updateStaffPw" parameterType="Staff">
+		update t_staff set password=#{password}
+			where id=#{id}
+	</update>
+	
+	<!-- 修改员工基本信息 -->
+	<update id="updateStaffOwnInfo" parameterType="Staff">
+		update t_staff set 
+		account=#{account},phone=#{phone},email=#{email}
+		where id=#{id}
+	</update>
+</mapper>
+
+
+
+
+

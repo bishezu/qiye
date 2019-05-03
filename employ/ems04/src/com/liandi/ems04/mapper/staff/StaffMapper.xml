@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC 
+	"-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.liandi.ems04.mapper.staff.StaffMapper">
+
+	<resultMap id="staffMap" type="Staff">
+		<id column="id" property="id" />
+		<result column="sid" property="sid" />
+		<result column="name" property="name" />
+		<result column="gender" property="gender" />
+		<result column="hiredate" property="hiredate" />
+		<result column="account" property="account" />
+		<result column="password" property="password" />
+		<result column="dept_id" property="deptId" />
+		<result column="title_id" property="titleId" />
+		<result column="admintype_id" property="admintypeId" />
+		<result column="birthday" property="birthday" />
+		<result column="phone" property="phone" />
+		<result column="email" property="email" />
+		<result column="edubackground" property="edubackground" />
+		<result column="salarylevel" property="salarylevel" />
+	</resultMap>
+
+	<!-- 添加员工 -->
+	<insert id="add" parameterType="staff">
+		insert into
+		t_staff(sid,name,gender,hiredate,account,password,dept_id,title_id,admintype_id,birthday,phone,email,edubackground,salarylevel)
+		values
+		(#{sid},#{name},#{gender},#{hiredate},#{account},#{password},#{deptId},#{titleId},#{admintypeId},#{birthday},#{phone},#{email},#{edubackground},#{salarylevel})
+	</insert>
+
+	<!-- 删除员工 -->
+	<delete id="deleteBySid" parameterType="int">
+		delete from t_staff where
+		sid = #{sid}
+	</delete>
+
+	<!-- 根据多个sid删除员工 -->
+	<delete id="deleteBySids" parameterType="map">
+		delete from t_staff where sid in
+		<foreach collection="sids" item="sid" open="(" separator=","
+			close=")">
+			#{sid}
+		</foreach>
+	</delete>
+
+
+	<!-- 根据多个id删除 -->
+	<!-- <delete id="deleteByIds" parameterType="map" > delete from t_student 
+		where id in <foreach collection="ids" item="id" open="(" separator="," close=")"> 
+		#{id} </foreach> </delete> -->
+
+	<!-- 更新员工信息 -->
+	<update id="update" parameterType="staff">
+		update t_staff
+		set
+		sid=#{sid},name=#{name},gender=#{gender},
+		hiredate=#{hiredate},
+		account=#{account},password=#{password},
+		dept_id=#{deptId},title_id=#{titleId},
+		admintype_id=#{admintypeId},birthday=#{birthday},
+		phone=#{phone},email=#{email},
+		edubackground=#{edubackground},
+		salarylevel=#{salarylevel}
+		where sid=#{sid}
+	</update>
+
+	<!-- 根据sid查询员工 -->
+	<select id="findBySid" parameterType="int" resultMap="staffMap">
+		select *
+		from t_staff
+		where sid=#{sid}
+	</select>
+
+	<!-- 根据账号查询 -->
+	<select id="findByAccount" parameterType="string" resultMap="staffMap">
+		select * from t_staff where account = #{account}
+	</select>
+
+	<!-- 根据账号和密码查询 -->
+	<select id="findByAccountAndPassword" parameterType="map"
+		resultMap="staffMap">
+		select * from t_staff
+		where account=#{account} and password=#{password}
+	</select>
+
+	<!-- 查询所有员工 -->
+	<select id="findAll" resultType="staff">
+		select * from t_staff
+	</select>
+
+	<!-- 根据账号查询是否存在账户 -->
+	<select id="isContainsAccount" parameterType="string"
+		resultType="boolean">
+		select count(*) from t_staff where account = #{account}
+	</select>
+
+	<!-- 动态查询、模糊查询、分页查询 -->
+	<!--  
+	<select id="find" parameterType="map" resultMap="staffResultMap">
+		select * from t_staff
+		<where>
+			<choose>
+				<when test="staff.id!=null">
+					id = #{staff.id}
+				</when>
+				<otherwise>
+				    <if test="staff.sid!=null and staff.sid!=''">
+						and sid = #{staff.sid}
+					</if>
+					<if test="staff.name!=null and staff.name!=''">
+						and name like '%${staff.name}%'
+					</if>
+					<if test="staff.gender!=null">
+						and gender = #{staff.gender}
+					</if>
+					<if test="staff.hiredate!=null and staff.hiredate!=''">
+						and hiredate = #{staff.hiredate}
+					</if>
+					<if test="staff.seniority!=null">
+						and seniority = #{staff.seniority}
+					</if>
+					<if test="staff.account!=null and staff.account!=''">
+						and account = #{staff.account}
+					</if>
+					<if test="staff.password!=null and staff.password!=''">
+						and password = #{staff.password}
+					</if>
+					<if test="staff.deptId!=null and staff.deptId!=''">
+						and deptId = #{staff.deptId}
+					</if>
+					<if test="staff.titleId!=null and staff.titleId!=''">
+						and titleId = #{staff.titleId}
+					</if>
+					<if test="staff.admintypeId!=null and staff.admintypeId!=''">
+						and admintypeId = #{staff.admintypeId}
+					</if>
+					<if test="staff.nation!=null and staff.nation!=''">
+						and nation = #{staff.nation}
+					</if>
+					<if test="staff.birthday!=null and staff.birthday!=''">
+						and birthday = #{staff.birthday}
+					</if>
+					<if test="staff.phone!=null and staff.phone!=''">
+						and phone = #{staff.phone}
+					</if>
+					<if test="staff.email!=null and staff.email!=''">
+						and email = #{staff.email}
+					</if>			
+					<if test="staff.homeaddress!=null and staff.homeaddress!=''">
+						and homeaddress = #{staff.homeaddress}
+					</if>
+					<if test="staff.edubackground!=null and staff.edubackground!=''">
+						and edubackground = #{staff.edubackground}
+					</if>
+					<if test="staff.school!=null and staff.school!=''">
+						and school = #{staff.school}
+					</if>
+					<if test="staff.profession!=null and staff.profession!=''">
+						and profession = #{staff.profession}
+					</if>
+				</otherwise>
+			</choose>
+		</where>
+		<if test="start!=null">
+			limit #{start},#{length}
+		</if>
+	</select>
+	--> 
+	
+</mapper>
