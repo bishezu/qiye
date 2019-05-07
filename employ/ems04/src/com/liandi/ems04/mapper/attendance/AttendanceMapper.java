@@ -24,6 +24,9 @@ public interface AttendanceMapper {
 	public Attendance findBySidAndDate(Map<String, Object> map);
 
 	public void update(Attendance attendance);
+	public void updateIn(Attendance attendance);
+	public void updateOut(Attendance attendance);
+	
 
 	public List<Attendance> findAll();
 	

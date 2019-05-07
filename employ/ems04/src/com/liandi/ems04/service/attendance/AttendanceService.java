@@ -139,13 +139,58 @@ public class AttendanceService implements IAttendanceService {
 	}  
 
 
-	/* 考勤计算方法 */
-	@Scheduled(cron = "0 19 10 ? * *")
-	public void summarize() {
-		List<Attendance> attendanceList = attendanceMapper.findAll();
+	/* 考勤计算方法  每天上午10点触发*/
+	/*@Scheduled(cron = "0 0 10 ? * *")*/
+	public void summarize(int sid) {
+		List<Attendance> attendanceList = attendanceMapper.findBySid(sid);
 		for (Attendance attendance : attendanceList) {
-			if (attendance.getCheckIn() == null
-					|| attendance.getCheckOut() == null) {
+			if (attendance.getCheckIn() == null) {
+				attendance.setHalfAbsenteeism(true);
+			} else {
+				DateFormat df = new SimpleDateFormat("HH:mm:ss");
+				Date d1 = null;
+				Date d2 = null;
+				Date d3 = null;
+				Date d4 = null;
+				try {
+					d1 = df.parse(attendance.getCheckIn());// 上班签到时间
+				//	d2 = df.parse(attendance.getCheckOut());// 下班签退时间
+					d3 = df.parse("09:00:00");// 公司规定上班时间
+				//	d4 = df.parse("18:00:00");// 公司规定下班时间
+
+				} catch (ParseException e) {
+					e.printStackTrace();
+				}
+			//	long diff1 = d2.getTime() - d1.getTime();// 当日工作时长
+				long diff2 = d1.getTime() - d3.getTime();// 上班打卡时间减去公司规定上班时间
+			//	long diff3 = d4.getTime() - d2.getTime();// 公司规定下班时间减去下班打卡时间
+				/*if (diff1 < 4 * 60 * 60 * 1000) {        //当日上班时间小于4小时，旷工
+					attendance.setAbsenteeism(true);
+				} else if (diff1>4 * 60 * 60 * 1000&&diff1 < 8 * 60 * 60 * 1000) {   //当日上班时间小于8小时，半天旷工
+					attendance.setHalfAbsenteeism(true);
+				}*/
+
+				 if (diff2 > 0 ) {
+					attendance.setArriveLate(true);   //迟到半小时内，迟到
+					if(diff2>4) {
+						attendance.setHalfAbsenteeism(true);   //迟到4小时以上，旷工半天
+					}
+				}
+
+			/*	if (diff3 > 30 * 60 * 1000 && diff1 >= 4 * 60 * 60 * 1000) {
+					attendance.setHalfAbsenteeism(true);     //早退半小时以上，工作时长超过4小时，半天旷工
+				} else if (diff3 > 0 && diff3 <30 * 60 * 1000 && diff1 >= 8 * 60 * 60 * 1000) {
+					attendance.setLeaveEarly(true);          //早退半小时内，工作时长8小时，早退
+				}*/
+			}
+			attendanceMapper.updateIn(attendance);
+		}
+	}
+	
+	public void summarize2(int sid) {
+		List<Attendance> attendanceList = attendanceMapper.findBySid(sid);
+		for (Attendance attendance : attendanceList) {
+			if (attendance.getCheckOut() == null) {
 				attendance.setHalfAbsenteeism(true);
 			} else {
 				DateFormat df = new SimpleDateFormat("HH:mm:ss");
@@ -164,26 +209,20 @@ public class AttendanceService implements IAttendanceService {
 				}
 				long diff1 = d2.getTime() - d1.getTime();// 当日工作时长
 				long diff2 = d1.getTime() - d3.getTime();// 上班打卡时间减去公司规定上班时间
-				long diff3 = d4.getTime() - d2.getTime();// 公司规定下班时间减去下班打卡时间
-				if (diff1 < 4 * 60 * 60 * 1000) {
+		    	long diff3 = d4.getTime() - d2.getTime();// 公司规定下班时间减去下班打卡时间
+				if (diff1 < 4 * 60 * 60 * 1000) {        //当日上班时间小于4小时，旷工
 					attendance.setAbsenteeism(true);
-				} else if (diff1 < 8 * 60 * 60 * 1000) {
+				} else if (diff1>4 * 60 * 60 * 1000&&diff1 < 8 * 60 * 60 * 1000) {   //当日上班时间小于8小时，半天旷工
 					attendance.setHalfAbsenteeism(true);
-				}
-
-				if (diff2 > 30 * 60 * 1000 && diff3 <= 30 * 60 * 1000 && diff1 >= 4 * 60 * 60 * 1000) {
-					attendance.setHalfAbsenteeism(true);
-				} else if (diff2 > 0 && diff1 >= 8 * 60 * 60 * 1000) {
-					attendance.setArriveLate(true);
 				}
 
 				if (diff3 > 30 * 60 * 1000 && diff1 >= 4 * 60 * 60 * 1000) {
-					attendance.setHalfAbsenteeism(true);
-				} else if (diff3 > 0 && diff2 <= 30 * 60 * 1000  &&diff1 >= 8 * 60 * 60 * 1000) {
-					attendance.setLeaveEarly(true);
+					attendance.setHalfAbsenteeism(true);     //早退半小时以上，工作时长超过4小时，半天旷工
+				} else if (diff3 > 0 ) {
+					attendance.setLeaveEarly(true);          //早退
 				}
 			}
-			attendanceMapper.update(attendance);
+			attendanceMapper.updateOut(attendance);
 		}
 	}
 }

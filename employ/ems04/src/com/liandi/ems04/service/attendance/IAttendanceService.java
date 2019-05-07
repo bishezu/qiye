@@ -17,7 +17,8 @@ public interface IAttendanceService {
 	public void checkIn(Attendance attendance);
 
 	public void checkOut(Attendance attendance);
-
+	
+	
 	public List<Attendance> findBySid(int sid);
 
 	public List<Attendance> findByDate(String presentDate);

@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.liandi.ems04.entity.attendance.Attendance;
 import com.liandi.ems04.entity.staff.Staff;
+import com.liandi.ems04.service.attendance.AttendanceService;
 import com.liandi.ems04.service.attendance.IAttendanceService;
 
 /*
@@ -32,7 +33,7 @@ import com.liandi.ems04.service.attendance.IAttendanceService;
 public class AttendanceHander {
 
 	@Autowired
-	private IAttendanceService attendanceService;
+	private AttendanceService attendanceService;
 	private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 	private SimpleDateFormat sdf2 = new SimpleDateFormat("HH:mm:ss");
 	private SimpleDateFormat sdf3 = new SimpleDateFormat("EEE");
@@ -55,6 +56,7 @@ public class AttendanceHander {
 				Attendance attendance = new Attendance(sid, name,
 						sdf.format(d), sdf2.format(d));
 				attendanceService.checkIn(attendance);
+				attendanceService.summarize(sid);
 			}
 		}
 		
@@ -82,63 +84,17 @@ public class AttendanceHander {
 				Attendance attendanceOut = new Attendance(sid,sdf.format(d),
 						sdf2.format(d));
 				attendanceService.checkOut(attendanceOut);
+				attendanceService.summarize2(sid);
 				
 			}else if(attendanceResult.getCheckOut() == null){
 				Attendance attendanceOut = new Attendance(sid,sdf.format(d),
 						sdf2.format(d));
 				attendanceService.checkOut(attendanceOut);
+				attendanceService.summarize2(sid);
 			}
 		}
 		return "redirect:signIn.action";
 	}
-
-//	/* 显示全部考勤记录控制方法 */
-//	@RequestMapping("/attendanceListAdmin")
-//	public String attendanceListAdmin(Map<String, Object> map,HttpSession session,
-//			HttpServletResponse response) throws IOException {
-//		PrintWriter out = response.getWriter();
-//		Staff staff = (Staff) session.getAttribute("staff");
-//		int id = staff.getAdmintypeId();
-//		if(id==2 || id==5){			
-//			List<Attendance> attendanceList = attendanceService.findAll();
-//			map.put("attendanceList", attendanceList);
-//			return "attendance/attendanceListAdmin";
-//		}else{
-//			out.flush();
-//		    out.println("<script>");
-//		    out.println("alert('你无此权限！');");
-//		    out.println("</script>");
-//		    return "empInfoModify";
-//		}
-//	}
-
-	/* 管理员按员工编号显示考勤记录控制方法 */
-//	@RequestMapping("/AdminFindBySid")
-//	public String AdminFindBySid(int sid, Map<String, Object> map) {
-//		List<Attendance> attendanceList = attendanceService.findBySid(sid);
-//		map.put("attendanceList", attendanceList);
-//		return "attendance/attendanceList";
-//	}
-	
-	/* 员工按员工编号显示考勤记录控制方法 */
-//	@RequestMapping("/EmlFindBySid")
-//	public String EmlFindBySid(HttpSession session,Map<String, Object> map) {
-//		Staff staff = (Staff) session.getAttribute("staff");
-//		int sid = staff.getSid();
-//		List<Attendance> attendanceList = attendanceService.findBySid(sid);
-//		map.put("attendanceList", attendanceList);
-//		return "attendance/attendanceListEml";
-//	}
-
-//	/* 管理员按日期显示考勤记录控制方法 */
-//	@RequestMapping("/AdminFindByDate")
-//	public String AdminFindByDate(String presentDate, Map<String, Object> map) {
-//		List<Attendance> attendanceList = attendanceService
-//				.findByDate(presentDate);
-//		map.put("attendanceList", attendanceList);
-//		return "attendance/attendanceList";
-//	}
-	
 	/* 员工按日期显示考勤记录控制方法 */
 	@RequestMapping("/EmlFindByDate")
 	public String EmlFindByDate(HttpSession session,String presentDate, Map<String, Object> map) {

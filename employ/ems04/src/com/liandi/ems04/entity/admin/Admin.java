@@ -21,9 +21,9 @@ public class Admin {
 	private Boolean deleteTitleById; // (根据职位id删除职位的权限)
 	private Boolean modifyTitleByStaffId; // (根据员工id修改职位的权限)
 	private Boolean addAchieveById; // (根据绩效id添加绩效的权限)
-	/*private Boolean deleteAdviceById; // (根据意见id删除意见及回复的权限)
-	private Boolean modifyReplayByAdviceId; // (根据意见id进行回复的权限)
-*/	private Boolean modifySalaryBySalaryLevelId; // (根据薪资等级id修改基本工资的权限)
+	/*private Boolean deleteAdviceById; // (根据意见id删除意见及回复的权限)*/
+	private Boolean addTrain; // (添加培训信息的权限)
+	private Boolean modifySalaryBySalaryLevelId; // (根据薪资等级id修改基本工资的权限)
 	private Boolean addStaff; // (添加员工的权限)
 	private Boolean modifyStaffByStaffId; // (根据员工id修改员工信息的权限)
 	private Boolean deleteStaffByStaffId; // (id删除员工的权限)
@@ -43,7 +43,7 @@ public class Admin {
 			Boolean modifySalaryBySalaryLevelId, Boolean addStaff,
 			Boolean modifyStaffByStaffId, Boolean deleteStaffByStaffId,
 			Boolean addAdminType, Boolean modifyAdmin, Boolean deleteAdminType,
-			Boolean modifyAdminType, Boolean addAchieveById) {
+			Boolean modifyAdminType, Boolean addAchieveById,Boolean addTrain) {
 		super();
 		this.adminType = adminType;
 		this.createTime = createTime;
@@ -64,6 +64,7 @@ public class Admin {
 		this.deleteAdminType = deleteAdminType;
 		this.modifyAdminType = modifyAdminType;
 		this.addAchieveById=addAchieveById;
+		this.addTrain=addTrain;
 	}
 
 	@Override
@@ -81,7 +82,7 @@ public class Admin {
 				+ ", deleteStaffByStaffId=" + deleteStaffByStaffId
 				+ ", addAdminType=" + addAdminType + ", modifyAdmin="
 				+ modifyAdmin + ", deleteAdminType=" + deleteAdminType
-				+ ", modifyAdminType=" + modifyAdminType +",addAchieveById="+addAchieveById+ "]";
+				+ ", modifyAdminType=" + modifyAdminType +",addAchieveById="+addAchieveById+ ",addTrain="+addTrain+"]";
 	}
 
 	@Override
@@ -142,6 +143,10 @@ public class Admin {
 		result = prime
 				* result
 				+ ((addAchieveById == null) ? 0 : addAchieveById
+						.hashCode());
+		result = prime
+				* result
+				+ ((addTrain == null) ? 0 : addTrain
 						.hashCode());
 		
 		return result;
@@ -259,7 +264,23 @@ public class Admin {
 				return false;
 		} else if (!addAchieveById.equals(other.addAchieveById))
 			return false;
+		
+		if (addTrain == null) {
+			if (other.addTrain != null)
+				return false;
+		} else if (!addTrain.equals(other.addTrain))
+			return false;
 		return true;
+		
+		
+	}
+
+	public Boolean getAddTrain() {
+		return addTrain;
+	}
+
+	public void setAddTrain(Boolean addTrain) {
+		this.addTrain = addTrain;
 	}
 
 	public Boolean getAddAchieveById() {

@@ -132,6 +132,15 @@
 		</dd>
 
 		
+		<dd>
+			<div class="title">
+				<span><img src="${pageContext.request.contextPath }/images/leftico01.png" /></span>培训管理
+			</div>
+			<ul class="menuson">
+				<li><cite></cite><a href="${pageContext.request.contextPath }/train/trainListAdmin.action" target="rightFrame">培训列表</a><i></i></li>
+				<li><cite></cite><a href="${pageContext.request.contextPath }/train/addTrain.action" target="rightFrame">培训信息</a><i></i></li>
+			</ul>
+		</dd>
 
 		<dd>
 			<div class="title">
@@ -141,5 +150,7 @@
 				<li><cite></cite><a href="${pageContext.request.contextPath }/admin/adminType.action" target="rightFrame">管理员种类</a><i></i></li>
 			</ul>
 		</dd>
+		
+		
 
 	</dl>

@@ -7,9 +7,9 @@
 
 	<resultMap id="titleMap" type="title">
 		<id column="id" property="id"/>
-		<result column="title_name" property="titleName"/>
+		<result column="titleName" property="titleName"/>
 	<!-- 	<result column="title_function" property="titleFunction"/> -->
-		<result column="dept_id" property="deptId"/>
+		<result column="deptId" property="deptId"/>
 	</resultMap>
 	
 	<resultMap id="staffMap" type="Staff">
@@ -40,7 +40,7 @@
 	
 	<!-- 添加 -->
 	<insert id="add" parameterType="title">
-		insert into title(title_name,dept_id)
+		insert into title(titleName,deptId)
 		values (#{titleName},#{deptId})
 	</insert>
 	

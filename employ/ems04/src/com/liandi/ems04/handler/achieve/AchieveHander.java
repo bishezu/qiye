@@ -39,7 +39,7 @@ public class AchieveHander {
 	private SimpleDateFormat sdf2 = new SimpleDateFormat("HH:mm:ss");
 	private SimpleDateFormat sdf3 = new SimpleDateFormat("EEE");
 
-	/* 显示绩效 */
+	// 显示绩效 
 	@RequestMapping("/achieve")
 	public String achieve(HttpSession session,Map<String, Object> map) {
 		Staff staff = (Staff) session.getAttribute("staff");
@@ -48,6 +48,7 @@ public class AchieveHander {
 		map.put("achieveList", achieveList);
 		return "achieve/achieveList";
 	}
+	
 	
 	/*添加绩效方法*/
 	@RequestMapping("/addAchieve")
@@ -84,6 +85,8 @@ public class AchieveHander {
 		return "achieve/achieveListAdmin";
 		
 	}
+
+	//显示该员工的绩效信息
 	@RequestMapping("/achieveList")
 	public String achieveList(HttpSession session,Map<String,Object> map) {
 		Staff staff = (Staff) session.getAttribute("staff");

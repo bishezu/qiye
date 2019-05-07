@@ -21,11 +21,9 @@
 	<!-- 增加 -->
 	<insert id="add" parameterType="Attendance">
 		insert into
-		attendance(sid,name,present_date,check_in,check_out,arrive_late,
-		leave_early,half_absenteeism,absenteeism)
+		attendance(sid,name,present_date,check_in)
 		values
-		(#{sid},#{name},#{presentDate},#{checkIn},#{checkOut},
-		#{arriveLate},#{leaveEarly},#{halfAbsenteeism},#{absenteeism})
+		(#{sid},#{name},#{presentDate},#{checkIn})
 	</insert>
 
 	<!-- 根据员工编号查询 -->
@@ -51,12 +49,28 @@
 	<update id="update" parameterType="attendance">
 		update attendance
 		set
-		check_out=#{checkOut},arrive_late=#{arriveLate},leave_early=#{leaveEarly},
-		half_absenteeism=#{halfAbsenteeism},absenteeism=#{absenteeism}
+		check_out=#{checkOut}
 		where
 		sid=#{sid} and present_date= #{presentDate}
 	</update>
-
+    
+    
+    <update id="updateIn" parameterType="attendance">
+     update attendance
+     set arrive_late=#{arriveLate},
+		half_absenteeism=#{halfAbsenteeism}
+		where
+		sid=#{sid} and present_date= #{presentDate}
+    </update>
+    
+    <update id="updateOut" parameterType="attendance">
+     update attendance
+     set leave_early=#{leaveEarly},
+		half_absenteeism=#{halfAbsenteeism},absenteeism=#{absenteeism}
+		where
+		sid=#{sid} and present_date= #{presentDate}
+    </update>
+    
 	<!-- 查询全部 -->
 	<select id="findAll" resultMap="attendanceResultMap">
 		select *from attendance

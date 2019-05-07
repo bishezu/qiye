@@ -82,7 +82,7 @@
 				<span><img src="${pageContext.request.contextPath }/images/leftico01.png" /></span>绩效管理
 			</div>
 			<ul class="menuson">
-				<li><cite></cite><a href="${pageContext.request.contextPath }/Achieve/achieveList.action" target="rightFrame">绩效列表</a><i></i></li>
+				<li><cite></cite><a href="${pageContext.request.contextPath }/Achieve/achieve.action" target="rightFrame">绩效列表</a><i></i></li>
 			</ul>
 		</dd>
 
@@ -92,6 +92,15 @@
 			</div>
 			<ul class="menuson">
 				<li><cite></cite><a href="${pageContext.request.contextPath }/salary/payroll.action" target="rightFrame">薪资列表</a><i></i></li>				
+			</ul>
+		</dd>
+		
+		<dd>
+			<div class="title">
+				<span><img src="${pageContext.request.contextPath }/images/leftico01.png" /></span>培训管理
+			</div>
+			<ul class="menuson">
+				<li><cite></cite><a href="${pageContext.request.contextPath }/train/signIn.action" target="rightFrame">培训列表</a><i></i></li>				
 			</ul>
 		</dd>
 

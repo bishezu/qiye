@@ -34,7 +34,7 @@ public class StaffHandler {
 		SimpleDateFormat simpleDate = new SimpleDateFormat("yyyy-MM-dd");   
 		Date date = new Date();
 		Date birth = formatter.parse(birthday);
-		Staff staff = new Staff(sid,name,gender,Timestamp.valueOf(simpleDate.format(date)),account, password,
+		Staff staff = new Staff(sid,name,gender,formatter.parse(simpleDate.format(date)),account, password,
 				deptId, titleId, admintypeId,birth, phone, email,
 				 edubackground, salarylevel);
 		staffService.registerStaff(staff);

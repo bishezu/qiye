@@ -26,7 +26,7 @@
 	
 	<!-- 添加 -->
 	<insert id="add" parameterType="Dept">
-		insert into dept(id,dept_name)
+		insert into dept
 		values (#{deptId},#{deptName})
 	</insert>
 	
@@ -37,7 +37,7 @@
 	
 	<!-- 按照部门ID查找员工信息-->
 	<select id="findStaffById" parameterType="int" resultMap="staffMap">
-	  	select * from staff where dept_id=#{id}
+	  	select * from t_staff where dept_id=#{id}
 	</select>
 	
 	<!-- 删除部门 -->
