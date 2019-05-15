@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC 
+	"-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+	
+<mapper namespace="com.liandi.ems04.mapper.dept.DeptMapper">
+<!-- 部门对应关系 -->
+	<resultMap id="deptMap" type="Dept">
+		<id column="id" property="deptId"/>
+		<result column="dept_name" property="deptName"/>
+	</resultMap>
+<!-- 员工对应关系 -->	
+	<resultMap id="staffMap" type="staff">
+		<id column="id" property="deptId"/>
+		<result column="sid" property="sid"/>
+		<result column="name" property="name"/>
+		<result column="gender" property="gender"/>
+		<result column="hiredate" property="hiredate"/>
+	<!-- 	<result column="seniority" property="seniority"/> -->
+		<result column="account" property="account"/>
+		<result column="password" property="password"/>
+		<result column="dept_id" property="deptId"/>
+		<result column="title_id" property="titleId"/>
+		<result column="admintype_id" property="admintypeId"/>
+	</resultMap>
+	
+	<!-- 添加 -->
+	<insert id="add" parameterType="Dept">
+		insert into dept
+		values (#{deptId},#{deptName})
+	</insert>
+	
+	<!-- 查询所有 -->
+	<select id="findAll" resultMap="deptMap">
+		select * from dept where id!=0
+	</select>
+	
+	<!-- 按照部门ID查找员工信息-->
+	<select id="findStaffById" parameterType="int" resultMap="staffMap">
+	  	select * from t_staff where dept_id=#{id}
+	</select>
+	
+	<!-- 删除部门 -->
+    <delete id="delete" parameterType="int">
+		delete from dept where id=#{id}		
+	</delete>
+	
+	<!-- 删除员工 -->
+    <update id="deleteemp" parameterType="int">
+		update 	t_staff set dept_id=0,title_id=0
+		where sid=#{sid}
+	</update>
+	<!-- 按照员工ID查找员工信息-->
+	<select id="findStaffBySid" parameterType="int" resultMap="staffMap">
+	  	select * from t_staff where sid=#{sid}
+	</select>
+
+</mapper>

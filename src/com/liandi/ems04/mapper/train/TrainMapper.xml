@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC 
+	"-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.liandi.ems04.mapper.train.TrainMapper">
+  <resultMap id="trainMap" type="train">
+		<id column="train_id" property="trainId"/>
+		<result column="num" property="num"/>
+		<result column="date" property="date"/>
+		<result column="info" property="info"/>
+		<result column="sid" property="sid"/> 
+		<result column="name" property="name"/>
+		<result column="check_in" property="checkIn"/>
+		<result column="result" property="result"/>
+	</resultMap>
+	
+	<!--添加培训信息  -->
+	<insert id="add" parameterType="train">
+	insert into train(num,date,info)
+		values (#{num},#{date},#{info})
+	</insert>
+	
+	<!--员工签到，更新表格  -->
+	<update id="checkIn" parameterType="train">
+	 update train set 
+	 sid=#{sid},name=#{name},check_in=#{checkIn},result=#{result}
+	</update>
+	
+	<!--查询  -->
+	<select id="find" resultMap="trainMap">
+	 select * from train
+	</select>
+	
+	<!--查询  by id-->
+	<select id="findById" parameterType="int" resultMap="trainMap">
+	 select * from train where 
+	 sid=#{sid}
+	</select>
+	
+	<!--查询日期  -->
+	<select id="selectDate" resultType="date">
+	 select date from train
+	</select>
+	
+	<!-- 分页根据员工编号查询 -->
+	<select id="findBySidPage" parameterType="int" resultMap="trainMap">
+		select *
+		from train where sid=#{sid,jdbcType=INTEGER} limit
+		#{startPos},#{pageSize}
+	</select>
+	
+	<!-- 根据员工编号查询取得记录的总数 -->
+	<select id="getTrainCountBySid" resultType="long">
+		select count(*) from train WHERE sid = #{sid,jdbcType=INTEGER}
+	</select>
+	
+	
+	
+	<!-- 分页根据当前日期查询 -->
+	<select id="findByDatePage"  resultMap="trainMap">
+		select *
+		from train where date=#{date,jdbcType=VARCHAR} limit
+		#{startPos,jdbcType=INTEGER},#{pageSize,jdbcType=INTEGER}
+	</select>
+	
+	<!-- 根据当前日期查询取得记录的总数 -->
+	<select id="getTrainCountByDate"  resultType="long">
+		select count(*) from train where date=#{date,jdbcType=VARCHAR	}
+	</select>
+
+
+
+	<!-- 分页查询全部 SQL语句 -->
+	<select id="findAllPage" resultMap="trainMap">
+		select *
+		from train  limit
+		#{startPos},#{pageSize}
+	</select>
+	<!-- 查询全部取得记录的总数 -->
+	<select id="getTrainCount" resultType="long">
+		select count(*) from train
+	</select>
+</mapper>

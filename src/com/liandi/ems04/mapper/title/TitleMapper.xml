@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC 
+	"-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+	
+<mapper namespace="com.liandi.ems04.mapper.title.TitleMapper">
+
+	<resultMap id="titleMap" type="title">
+		<id column="id" property="id"/>
+		<result column="titleName" property="titleName"/>
+	<!-- 	<result column="title_function" property="titleFunction"/> -->
+		<result column="deptId" property="deptId"/>
+	</resultMap>
+	
+	<resultMap id="staffMap" type="Staff">
+		<id column="id" property="id" />
+		<result column="sid" property="sid" />
+		<result column="name" property="name" />
+		<result column="gender" property="gender" />
+		<result column="hiredate" property="hiredate" />
+		<!-- <result column="seniority" property="seniority" /> -->
+		<result column="account" property="account" />
+		<result column="password" property="password" />
+		<result column="dept_id" property="deptId" />
+		<result column="title_id" property="titleId" />
+		<result column="admintype_id" property="admintypeId" />
+		<result column="nation" property="nation" />
+		<result column="birthday" property="birthday" />
+		<result column="phone" property="phone" />
+		<result column="email" property="email" />
+		<!-- <result column="homeaddress" property="homeaddress" /> -->
+		<result column="edubackground" property="edubackground" />
+		<!-- <result column="school" property="school" />
+		<result column="profession" property="profession" /> -->
+		<result column="salarylevel" property="salarylevel" />
+		<!-- <result column="numbera" property="numbera" />
+		<result column="numberb" property="numberb" />
+		<result column="numberc" property="numberc" /> -->
+	</resultMap>
+	
+	<!-- 添加 -->
+	<insert id="add" parameterType="title">
+		insert into title(titleName,deptId)
+		values (#{titleName},#{deptId})
+	</insert>
+	
+	<!-- 删除职位 -->
+	<delete id="deleteById" parameterType="int">
+		delete from title 
+		where id=#{id};
+	</delete>
+	
+	<!-- 删除职位内员工 -->
+	<update id="deleteStaffById" parameterType="int">
+		update t_staff
+		set title_id=0
+		where title_id=#{titleId}
+	</update>
+	
+	<!-- 修改 -->
+	<update id="update" parameterType="title">
+		update title
+		set title_name=#{titleName},dept_id=#{deptId}
+		where id=#{id}
+	</update>
+	
+	<!-- 修改员工职位 -->
+	<update id="updateById" parameterType="staff">
+		update t_staff
+		set title_id=#{titleId}
+		where sid=#{sid}
+	</update>
+	
+	<!-- 显示所有 -->
+	<select id="findAll" resultMap="titleMap">
+		select * from title where id!=0
+	</select>
+	
+	<!-- 根据id查询 -->
+	<select id="findById" parameterType="int" resultMap="titleMap">
+		select * from title where id=#{id}
+	</select>
+	
+	<!-- 查询职位所有员工基本信息-->
+ 	<select id="findStaffAllById" parameterType="int" resultMap="staffMap"> 
+		select sid,name,gender
+		from t_staff
+ 		where title_id=#{titleId} 
+	</select>
+	
+	
+	<!-- 根据员工id查询	-->
+	<select id="findByStaffId" parameterType="int" resultMap="staffMap">
+		select * from t_staff where sid=#{sid}
+	</select>
+ 
+</mapper>
+
+
+
+
+

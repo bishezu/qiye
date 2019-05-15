@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC 
+	"-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.liandi.ems04.mapper.achieve.AchieveMapper">
+
+	<resultMap id="achieveResultMap" type="achieve">
+		<id column="achieve_id" property="id" />
+		<id column="sid" property="sid" />
+		<result column="name" property="name" />
+		<result column="work_achieve" property="achieve" />
+		<result column="work_efficient" property="efficient"  />
+		<result column="absent" property="absent" />
+		<result column="level" property="level" />
+	</resultMap>
+
+	<!-- 增加 -->
+	<insert id="add" parameterType="Achieve">
+		insert into
+		achieve(sid,name,work_achieve,work_efficient,absent,level)
+		values
+		(#{sid},#{name},#{achieve},#{efficient},#{absent},
+		#{level})
+	</insert>
+
+	<!-- 根据员工编号查询 -->
+	<select id="findBySid" parameterType="int" resultMap="achieveResultMap">
+		select *
+		from achieve where sid=#{sid}
+	</select>
+
+
+	<!-- 查询全部 -->
+	<select id="findAll" resultMap="achieveResultMap">
+		select *from achieve
+	</select>
+	
+	
+	
+	
+	<!-- 分页根据员工编号查询 -->
+	<select id="findBySidPage" parameterType="int" resultMap="achieveResultMap">
+		select *
+		from achieve where sid=#{sid,jdbcType=INTEGER} limit
+		#{startPos},#{pageSize}
+	</select>
+	
+	<!-- 根据员工编号查询取得记录的总数 -->
+	<select id="getAchieveCountBySid" resultType="long">
+		select count(*) from achieve WHERE sid = #{sid,jdbcType=INTEGER}
+	</select>
+	
+	
+	
+	<!-- 分页查询全部 SQL语句 -->
+	<select id="findAllPage" resultMap="achieveResultMap">
+		select *
+		from achieve  limit
+		#{startPos},#{pageSize}
+	</select>
+	<!-- 查询全部取得记录的总数 -->
+	<select id="getAchieveCount" resultType="long">
+		select count(*) from achieve
+	</select>
+
+</mapper>
+
+
+
+
+

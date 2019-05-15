@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC 
+	"-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.liandi.ems04.mapper.dayoff.DayoffMapper">
+<resultMap id="dayoffResultMap" type="dayoff">
+		<id column="dayoff_id" property="id" />
+		<id column="sid" property="sid" />
+		<result column="name" property="name" />
+		<result column="days" property="days" />
+		<result column="dayoff_time" property="time" jdbcType="TIME" />
+		<result column="reason" property="reason" />
+	</resultMap>
+<!-- 增加 -->
+	<insert id="add" parameterType="Dayoff">
+		insert into
+		dayoff(sid,name,days,dayoff_time,reason)
+		values
+		(#{sid},#{name},#{days},#{time},#{reason})
+	</insert>
+	<!-- 根据员工编号查询 -->
+	<select id="findBySid" parameterType="int" resultMap="dayoffResultMap">
+		select *
+		from dayoff where sid=#{sid}
+	</select>
+
+	<!-- 根据日期查询 -->
+	<select id="findByDate" parameterType="String" resultMap="dayoffResultMap">
+		select
+		* from dayoff where dayoff_time=#{time}
+	</select>
+
+	<!-- 根据员工编号和日期查询 -->
+	<select id="findBySidAndDate" parameterType="map"
+		resultMap="dayoffResultMap">
+		select * from dayoff where sid=#{sid} and
+		dayoff_time=#{time}
+	</select>
+	
+	
+	
+	<!-- 查询全部 -->
+	<select id="findAll" resultMap="dayoffResultMap">
+		select *from dayoff
+	</select>
+	
+	
+	
+	
+	<!-- 分页根据员工编号查询 -->
+	<select id="findBySidPage" parameterType="int" resultMap="dayoffResultMap">
+		select *
+		from dayoff where sid=#{sid,jdbcType=INTEGER} limit
+		#{startPos},#{pageSize}
+	</select>
+	
+	<!-- 根据员工编号查询取得记录的总数 -->
+	<select id="getDayoffCountBySid" resultType="long">
+		select count(*) from dayoff WHERE sid = #{sid,jdbcType=INTEGER}
+	</select>
+	
+	
+	
+	<!-- 分页根据当前日期查询 -->
+	<select id="findByDatePage"  resultMap="dayoffResultMap">
+		select *
+		from dayoff where dayoff_time=#{time,jdbcType=VARCHAR} limit
+		#{startPos,jdbcType=INTEGER},#{pageSize,jdbcType=INTEGER}
+	</select>
+	
+	<!-- 根据当前日期查询取得记录的总数 -->
+	<select id="getDayoffCountByDate"  resultType="long">
+		select count(*) from dayoff where dayoff_time=#{time,jdbcType=VARCHAR	}
+	</select>
+
+
+
+	<!-- 分页查询全部 SQL语句 -->
+	<select id="findAllPage" resultMap="dayoffResultMap">
+		select *
+		from dayoff  limit
+		#{startPos},#{pageSize}
+	</select>
+	<!-- 查询全部取得记录的总数 -->
+	<select id="getDayoffCount" resultType="long">
+		select count(*) from dayoff
+	</select>
+	
+	
+</mapper>
